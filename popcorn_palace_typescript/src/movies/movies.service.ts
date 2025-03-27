@@ -40,7 +40,7 @@ export class MoviesService {
         return this.movieRepository.save(movie);
     }
 
-    async remove(id: number): Promise<void> {
+    async remove(id: number): Promise<{ message: string }> {
         const movie = await this.movieRepository.findOneBy({ id });
     
         if (!movie) {
@@ -48,5 +48,6 @@ export class MoviesService {
         }
     
         await this.movieRepository.remove(movie);
+        return { message: `Movie with ID ${id} successfully deleted` };
     }
 }

@@ -27,5 +27,5 @@ export class CreateMovieDto {
     @IsInt()
     @Min(1888, { message: 'Movies release date must be after 1888' })
     @Max(new Date().getFullYear() + 5, { message: 'Release year cannot be more than 5 years in the future' })
-    release_year: number;
+    releaseYear: number;
 }
