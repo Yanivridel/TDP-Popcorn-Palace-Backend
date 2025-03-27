@@ -14,7 +14,7 @@ import { MoviesModule } from './movies/movies.module';
       password: 'popcorn-palace',
       database: 'popcorn-palace',
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
     }),
     MoviesModule,
   ],

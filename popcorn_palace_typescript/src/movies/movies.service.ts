@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Movie } from './movies.entity';
 import { CreateMovieDto } from './dto/create-movie.dto';
+import { validateOrReject } from 'class-validator';
 
 @Injectable()
 export class MoviesService {
@@ -25,6 +26,14 @@ export class MoviesService {
     
         if (!movie) {
             throw new NotFoundException(`Movie with ID ${id} not found`);
+        }
+
+        const updatedMovie = Object.assign(new CreateMovieDto(), movie, updateMovieDto);
+
+        try {
+            await validateOrReject(updatedMovie);
+        } catch (errors) {
+            throw new BadRequestException(errors);
         }
     
         Object.assign(movie, updateMovieDto);
