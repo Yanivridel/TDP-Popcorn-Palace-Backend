@@ -16,7 +16,7 @@ export class ShowtimesController {
         return this.showtimesService.findOne(id);
     }
 
-    @Patch(':id')
+    @Post('update/:id')
     async update(@Param('id') id: number, @Body() updateShowtimeDto: Partial<CreateShowtimeDto>) {
         return this.showtimesService.update(id, updateShowtimeDto);
     }

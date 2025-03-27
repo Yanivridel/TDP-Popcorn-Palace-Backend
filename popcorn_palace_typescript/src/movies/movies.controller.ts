@@ -11,12 +11,12 @@ export class MoviesController {
         return this.moviesService.create(createMovieDto);
     }
 
-    @Get()
+    @Get('all')
     findAll() {
         return this.moviesService.findAll();
     }
 
-    @Patch(':id')
+    @Post('update/:id')
     async update(@Param('id') id: number, @Body() updateMovieDto: Partial<CreateMovieDto>) {
         return this.moviesService.update(id, updateMovieDto);
     }

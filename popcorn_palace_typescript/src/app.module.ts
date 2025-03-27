@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MoviesModule } from './movies/movies.module';
 import { ShowtimesModule } from './showtimes/showtimes.module';
+import { TicketsModule } from './tickets/tickets.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ShowtimesModule } from './showtimes/showtimes.module';
     }),
     MoviesModule,
     ShowtimesModule,
+    TicketsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
