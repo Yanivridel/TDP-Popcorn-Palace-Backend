@@ -88,20 +88,60 @@ Before you start, ensure you have the following tools installed on your machine:
 
 ---
 
-## 4. Running the Project
+## 4. Database Setup
+
+The database schema is not automatically created by `docker-compose`, so you need to manually create the necessary tables in your PostgreSQL database. Below are the SQL commands you can use to create the required tables.
+
+### SQL to Create Tables
+
+Run the following SQL queries in your PostgreSQL database to create the necessary tables for the **Popcorn Palace** system.
+
+```sql
+-- Movies Table
+CREATE TABLE movies (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title VARCHAR(255) NOT NULL,
+    genre VARCHAR(100),
+    duration INT,
+    rating FLOAT,
+    releaseYear INT
+);
+
+-- Showtimes Table
+CREATE TABLE showtimes (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    movieId UUID REFERENCES movies(id) ON DELETE CASCADE,
+    startTime TIMESTAMP NOT NULL,
+    CONSTRAINT unique_showtime UNIQUE (movieId, startTime)  -- Ensures no overlapping showtimes for the same movie
+);
+
+-- Tickets Table
+CREATE TABLE tickets (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    showtimeId UUID REFERENCES showtimes(id) ON DELETE CASCADE,
+    seatNumber INT NOT NULL,
+    userId VARCHAR(100) NOT NULL,
+    isBooked BOOLEAN DEFAULT FALSE,
+    bookingId UUID DEFAULT gen_random_uuid(),
+    CONSTRAINT unique_seat UNIQUE (showtimeId, seatNumber),  -- Ensures no double booking for the same seat in a showtime
+    CONSTRAINT valid_booking CHECK (isBooked = TRUE AND seatNumber IS NOT NULL)  -- Ensures a valid booking with a seat number
+);
+
+
+## 5. Running the Project
 
 **Run the Application**: 
 Once the dependencies are installed, and PostgreSQL is set up, run the application in development mode:
 
 ```bash
-npm run start:dev
+npm run start
 ```
 
 This will start the server on http://localhost:3000 (default). You can access the API endpoints here.
 
 ---
 
-## 5. Building the Project
+## 6. Building the Project
 
 To build the project for production, run the following command:
 
@@ -117,16 +157,9 @@ npm run start:prod
 
 ---
 
-## 6. Testing the Project
+## 7. Testing the Project
 
 The project is equipped with unit and end-to-end tests to verify that all functionality works as expected.
-
-### Run Unit Tests:
-Unit tests are written using Jest. To run the unit tests:
-
-```bash
-npm run test
-```
 
 ### Run End-to-End (E2E) Tests:
 To run the E2E tests that test the entire application flow:
@@ -137,25 +170,10 @@ npm run test:e2e
 
 This will start the app, make requests to the endpoints, and verify that the expected behavior occurs (e.g., booking tickets, creating showtimes, etc.).
 
-### Test Coverage:
-To check the test coverage, use:
-
-```bash
-npm run test:cov
-```
-
 This command will show the test coverage report for the project.
 
 ---
 
-## 7. Additional Notes
+## 8. Additional Notes
 
 - **Error Handling**: Proper error handling has been implemented using BadRequestException for cases like booking the same seat twice.
-
-- **Database Migrations**: You may use TypeORM migrations if you need to apply schema changes:
-  ```bash
-  npm run migration:generate
-  npm run migration:run
-  ```
-
-- **API Documentation**: The project includes automatic Swagger API documentation, which can be accessed at http://localhost:3000/api when the app is running.

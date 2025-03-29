@@ -56,7 +56,7 @@ This endpoint is used to create a new movie entry.
 
 ### Get All Movies
 
-**GET** `/movies`
+**GET** `/movies/all`
 
 This endpoint retrieves all the movies available in the system.
 
@@ -74,24 +74,21 @@ This endpoint retrieves all the movies available in the system.
 ]
 ```
 
-### Get a Movie by ID
+### Update a Movie by ID
 
-**GET** `/movies/:id`
+**POST** `/movies/:id`
 
-This endpoint retrieves a specific movie based on the provided movie ID.
+This endpoint let you change a specific movie properties based on the provided movie ID.
 
 #### URL Params:
 - id (string) - The ID of the movie.
 
 #### Response:
+Response can contain any parts of  data (single or multiple properties) to be change in the object
 ```json
 {
-  "id": "movie-id",
-  "title": "Movie Title",
-  "genre": "Movie Genre",
-  "duration": 120,
-  "rating": 8.5,
-  "releaseYear": 2023
+  "title": "Movie Title 2",
+  "duration": 130,
 }
 ```
 
@@ -138,41 +135,49 @@ This endpoint is used to create a new showtime for a movie.
 }
 ```
 
-### Get All Showtimes
+### Get Showtimes by id
 
-**GET** `/showtimes`
+**GET** `/showtimes/:id`
 
-This endpoint retrieves all the showtimes available in the system.
-
-#### Response:
-```json
-[
-  {
-    "id": "showtime-id",
-    "movieId": "movie-id",
-    "startTime": "2025-04-01T14:00:00.000Z"
-  }
-]
-```
-
-### Get Showtimes by Movie ID
-
-**GET** `/showtimes/movie/:movieId`
-
-This endpoint retrieves all the showtimes for a specific movie.
+This endpoint return the showtime with the movie data aswell.
 
 #### URL Params:
-- movieId (string) - The ID of the movie.
+- id (string) - The ID of the showtime.
 
 #### Response:
 ```json
-[
-  {
-    "id": "showtime-id",
-    "movieId": "movie-id",
-    "startTime": "2025-04-01T14:00:00.000Z"
-  }
-]
+{
+    "id": 12,
+    "theater": "IMAX Hall 6",
+    "startTime": "2025-04-01T12:30:00.000Z",
+    "endTime": "2025-04-01T20:30:00.000Z",
+    "price": 15.5,
+    "movie": {
+        "id": 9,
+        "title": "Inception",
+        "genre": "Sci-Fi",
+        "duration": 148,
+        "rating": 8.8,
+        "releaseYear": 2010
+    }
+}
+```
+
+### Update a Showtime by ID
+
+**POST** `/movies/:id`
+
+This endpoint let you change a specific showtime properties based on the provided showtime ID.
+
+#### URL Params:
+- id (string) - The ID of the movie.
+
+#### Response:
+Response can contain any parts of  data (single or multiple properties) to be change in the object
+```json
+{
+    "theater": "IMAX Hall 6"
+}
 ```
 
 ### Delete a Showtime
@@ -216,29 +221,6 @@ This endpoint is used to book a ticket for a specific showtime and seat.
   "bookingId": "booking-id"
 }
 ```
-
-### Get All Booked Tickets for a Showtime
-
-**GET** `/bookings/showtime/:showtimeId`
-
-This endpoint retrieves all booked tickets for a specific showtime.
-
-#### URL Params:
-- showtimeId (string) - The ID of the showtime.
-
-#### Response:
-```json
-[
-  {
-    "bookingId": "booking-id",
-    "seatNumber": 10,
-    "userId": "user-id",
-    "isBooked": true
-  }
-]
-```
-
----
 
 ## 6. Error Handling
 
