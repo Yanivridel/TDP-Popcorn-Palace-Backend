@@ -5,6 +5,7 @@ import { Showtime } from './showtimes.entity';
 import { Movie } from '../movies/movies.entity';
 import { CreateShowtimeDto } from './dto/create-showtime.dto';
 import * as moment from 'moment';
+import { Ticket } from 'src/tickets/ticket.entity';
 
 @Injectable()
 export class ShowtimesService {
@@ -13,6 +14,8 @@ export class ShowtimesService {
         private readonly showtimeRepository: Repository<Showtime>,
         @InjectRepository(Movie)
         private readonly movieRepository: Repository<Movie>,
+        @InjectRepository(Ticket)
+        private readonly ticketRepository: Repository<Ticket>,
     ) {}
 
     async create(createShowtimeDto: CreateShowtimeDto): Promise<Showtime> {
@@ -132,6 +135,8 @@ export class ShowtimesService {
         if (!showtime) {
             throw new NotFoundException(`Showtime with ID ${id} not found`);
         }
+
+        await this.ticketRepository.delete({ showtime: { id } }); // Temporary for testing cause no Ticket delete endpoints
 
         await this.showtimeRepository.remove(showtime);
         return { message: `Showtime with ID ${id} successfully deleted` };
